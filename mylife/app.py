@@ -8,6 +8,18 @@ app=Flask(__name__)
 line_bot_api=LineBotApi('2009429061')
 handler=WedhookHandler('2c4b958ca60c8bcba4e27a864e9cf333')
 
+@app.route("/callback",methods=['POST'])
+def callback():
+    signature=request.headers['X-Line-Signature']
+    body=request.get_data(as_text=True)
+
+    try:
+        handler.handle(body,signature)
+    except InvalidSignatureError:
+        abort(400)
+
+    return 'OK'
+
 @handler.add(MessageEvent, message=TextMassage)
 def handle_message(event):
     text=event.message.text #=届いた文字
@@ -25,19 +37,6 @@ def handle_message(event):
         event.reply_token,
         TextSendMessage(text=reply_message)
     )
-
-@app.route("/callback",methods=['POST'])
-def callback():
-    signature=request.headers['X-Line-Signature']
-    body=request.get_data(as_text=True)
-
-    try:
-        handler.handle(body,signature)
-    except InvalidSignatureError:
-        abort(400)
-
-    return 'OK'
-
 
 if __name__=="__main__":
     import os
