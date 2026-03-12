@@ -3,7 +3,7 @@ from linebot import LineBotApi, WedhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMassage, TextSendMessage
 
-app=Flask(__mylife__)
+app=Flask(__name__)
 
 line_bot_api=LineBotApi('2009429061')
 handler=WedhookHandler('2c4b958ca60c8bcba4e27a864e9cf333')
@@ -26,5 +26,5 @@ def handle_message(event):
         TextSendMessage(text=reply_message)
     )
 
-if __mylife__=="__main__":
+if __name__=="__main__":
     app.run
